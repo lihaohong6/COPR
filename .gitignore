@@ -1,0 +1,5 @@
+*-build/
+*.rpm
+*.tar.gz
+*.zip
+result*/
