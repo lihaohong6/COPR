@@ -13,6 +13,8 @@ BuildRequires:  zip
 BuildRequires:  unzip
 BuildRequires:  java-21-openjdk-devel
 
+Patch0:         include_stdint.patch
+
 # FIXME: should only disable stripping and keep everything else
 %define __spec_install_post /bin/true
 
@@ -21,6 +23,7 @@ Build and test software of any size, quickly and reliably.
 
 %prep
 unzip %{_sourcedir}/bazel-%{version}-dist.zip
+%patch 0
 
 %build
 env EXTRA_BAZEL_ARGS="--tool_java_runtime_version=local_jdk" bash ./compile.sh
