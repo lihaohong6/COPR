@@ -1,5 +1,5 @@
-Name:           bazel 
-Version:        8.1.1        
+Name:           bazel7
+Version:        7.5.0        
 Release:        %autorelease
 Summary:        Build and test software of any size, quickly and reliably. 
 License:        Apache-2.0
@@ -20,18 +20,18 @@ BuildRequires:  java-21-openjdk-devel
 Build and test software of any size, quickly and reliably.
 
 %prep
-unzip %{_sourcedir}/bazel-${version}-dist.zip
+unzip %{_sourcedir}/bazel-%{version}-dist.zip
 
 %build
 env EXTRA_BAZEL_ARGS="--tool_java_runtime_version=local_jdk" bash ./compile.sh
 ./output/bazel build //src:bazel --compilation_mode=opt --stamp --embed_label=%{version}
 
 %install
-install -Dpm 0755 ./bazel-bin/src/bazel                  %{buildroot}%{_bindir}/bazel
+install -Dpm 0755 ./bazel-bin/src/bazel                  %{buildroot}%{_bindir}/%{name}
 install -Dpm 0644 ./scripts/zsh_completion/_bazel        %{buildroot}%{_datadir}/zsh/site-functions/_%{name}
 
 %files
-%{_bindir}/bazel
+%{_bindir}/%{name}
 %{_datadir}/zsh/site-functions/_%{name}
 %doc 
 %license LICENSE 
