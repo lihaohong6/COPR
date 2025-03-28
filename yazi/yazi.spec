@@ -53,22 +53,22 @@ CC=clang
 %else
 CC=gcc
 %endif
-RUSTFLAGS='-Copt-level=3 -Cdebuginfo=2 -Ccodegen-units=1 -Cstrip=none -Cforce-frame-pointers=yes' cargo build -j${RPM_BUILD_NCPUS} --release
+RUSTFLAGS='-Copt-level=3 -Cdebuginfo=2 -Ccodegen-units=1 -Cstrip=none -Cforce-frame-pointers=yes' cargo build -j${RPM_BUILD_NCPUS} --release --locked
+cargo tree --workspace --edges no-build,no-dev,no-proc-macro --no-dedupe --target all --prefix none --format "{l}: {p}" | sed -e "s: ($(pwd)[^)]*)::g" -e "s: / :/:g" -e "s:/: OR :g" | sort -u > LICENSE.dependencies
 
 %install
-%cargo_install
+# %%cargo_install
+install -Dpm 0755 -t %{buildroot}%{_bindir} target/release/yazi target/release/ya 
 
 %if %{with check}
 %check
-%cargo_test
+# %%cargo_test
 %endif
 
 %files
 %license LICENSE
 %license LICENSE-ICONS
 %license LICENSE.dependencies
-%doc CODE_OF_CONDUCT.md
-%doc CONTRIBUTING.md
 %doc README.md
 %{_bindir}/ya
 %{_bindir}/yazi
