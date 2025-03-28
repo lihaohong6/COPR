@@ -6,9 +6,7 @@ Version:        25.3.2
 Release:        %autorelease
 Summary:        Yazi file manager
 
-SourceLicense:  MIT
-# FIXME: paste output of %%cargo_license_summary here
-License:        # FIXME
+License:        MIT
 
 URL:            https://yazi-rs.github.io 
 Source:         https://github.com/sxyazi/yazi/archive/refs/tags/v%{version}.tar.gz
@@ -27,11 +25,7 @@ Recommends: git
 
 BuildRequires: cargo-rpm-macros >= 24
 BuildRequires: make
-%if 0%{?fedora} >= 42
-BuildRequires: clang 
-%else
 BuildRequires: gcc
-%endif
 BuildRequires: git
 
 %global _description %{expand:
@@ -49,9 +43,7 @@ Blazing fast terminal file manager written in Rust, based on async I/O.}
 %build
 # %%cargo_build
 %if 0%{?fedora} >= 42
-CC=clang
-%else
-CC=gcc
+CFLAGS="$CFLAGS -std=gnu17"
 %endif
 RUSTFLAGS='-Copt-level=3 -Cdebuginfo=2 -Ccodegen-units=1 -Cstrip=none -Cforce-frame-pointers=yes' cargo build -j${RPM_BUILD_NCPUS} --release --locked
 cargo tree --workspace --edges no-build,no-dev,no-proc-macro --no-dedupe --target all --prefix none --format "{l}: {p}" | sed -e "s: ($(pwd)[^)]*)::g" -e "s: / :/:g" -e "s:/: OR :g" | sort -u > LICENSE.dependencies
