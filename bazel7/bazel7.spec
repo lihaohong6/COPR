@@ -23,7 +23,7 @@ Build and test software of any size, quickly and reliably.
 
 %prep
 unzip %{_sourcedir}/bazel-%{version}-dist.zip
-%patch 0
+%patch -P0
 
 %build
 env EXTRA_BAZEL_ARGS="--tool_java_runtime_version=local_jdk" bash ./compile.sh
