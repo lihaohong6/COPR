@@ -122,13 +122,16 @@ def commit_changes(updates: list[tuple[CoprProject, ProjectUpdate]]):
     subprocess.run(["git", "push"], check=True, cwd=cwd)
 
 
-def try_build_locally(project: CoprProject) -> bool:
+def try_build_locally(project: CoprProject, only_prep: bool = False) -> bool:
     cwd = project_root / project.local_name
     p = subprocess.run(["spectool", "-g", f"{project.local_name}.spec"], cwd=cwd)
     if p.returncode != 0:
         logging.error(f"spectool failed for project {project.local_name}")
         return False
-    p = subprocess.run(["fedpkg", "--release", "rawhide", "mockbuild", "--enable-network"], cwd=cwd)
+    if only_prep:
+        p = subprocess.run(["fedpkg", "--release", "rawhide", "prep"], cwd=cwd)
+    else:
+        p = subprocess.run(["fedpkg", "--release", "rawhide", "mockbuild", "--enable-network"], cwd=cwd)
     if p.returncode != 0:
         logging.error(f"fedpkg failed for project {project.local_name}")
         return False
@@ -164,10 +167,9 @@ def main():
         return
     commit_changes(updates)
     for u in updates:
-        if u[0].test_build_locally:
-            r = try_build_locally(u[0])
-            if r is False:
-                continue
+        r = try_build_locally(u[0], only_prep=not u[0].test_build_locally)
+        if r is False:
+            continue
         copr_rebuild(u[0])
 
 
