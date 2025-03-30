@@ -1,5 +1,5 @@
 Name:           bazel7
-Version:        7.5.0        
+Version:        7.6.0
 Release:        %autorelease
 Summary:        Build and test software of any size, quickly and reliably. 
 License:        Apache-2.0
