@@ -12,6 +12,7 @@ URL:            https://yazi-rs.github.io
 Source:         https://github.com/sxyazi/yazi/archive/refs/tags/v%{version}.tar.gz
 
 Requires: file
+Recommends: ffmpeg
 Recommends: p7zip
 Recommends: p7zip-plugins
 Recommends: jq
@@ -35,13 +36,8 @@ Blazing fast terminal file manager written in Rust, based on async I/O.}
 
 %prep
 %autosetup -n yazi-%{version} -p1
-# %%cargo_prep
-
-%generate_buildrequires
-# %%cargo_generate_buildrequires
 
 %build
-# %%cargo_build
 %if 0%{?fedora} >= 42
 CFLAGS="$CFLAGS -std=gnu17"
 %endif
@@ -49,7 +45,6 @@ RUSTFLAGS='-Copt-level=3 -Cdebuginfo=2 -Ccodegen-units=1 -Cstrip=none -Cforce-fr
 cargo tree --workspace --edges no-build,no-dev,no-proc-macro --no-dedupe --target all --prefix none --format "{l}: {p}" | sed -e "s: ($(pwd)[^)]*)::g" -e "s: / :/:g" -e "s:/: OR :g" | sort -u > LICENSE.dependencies
 
 %install
-# %%cargo_install
 install -Dpm 0755 -t %{buildroot}%{_bindir} target/release/yazi target/release/ya 
 
 %if %{with check}
