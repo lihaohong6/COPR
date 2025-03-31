@@ -1,3 +1,4 @@
+import argparse
 import logging
 import re
 import subprocess
@@ -155,7 +156,25 @@ def copr_rebuild(project: CoprProject):
     logging.info(f"Rebuilt {project.local_name} on COPR")
 
 
+def set_log_level():
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        '--debug',
+        help="Print lots of debugging statements",
+        action="store_const", dest="loglevel", const=logging.DEBUG,
+        default=logging.WARNING,
+    )
+    parser.add_argument(
+        '--verbose',
+        help="Be verbose",
+        action="store_const", dest="loglevel", const=logging.INFO,
+    )
+    args = parser.parse_args()
+    logging.basicConfig(level=args.loglevel)
+
+
 def main():
+    set_log_level()
     updates: list[tuple[CoprProject, ProjectUpdate]] = []
     for project in all_projects:
         result = update_project(project)
