@@ -47,9 +47,9 @@ cargo tree --workspace --edges no-build,no-dev,no-proc-macro --no-dedupe --targe
 
 %install
 install -Dpm 0755 -t %{buildroot}%{_bindir} target/release/yazi target/release/ya 
-install -Dpm 0644 yazi-boot/completions/%{name}.bash %{buildroot}%{_datadir}/bash-completion/completions/%{name}
-install -Dpm 0644 yazi-boot/completions/%{name}.fish %{buildroot}%{_datadir}/fish/vendor_completions.d/%{name}.fish
-install -Dpm 0644 yazi-boot/completions/_%{name} %{buildroot}%{_datadir}/zsh/site-functions/_%{name}
+install -Dpm 0644 yazi-boot/completions/%{name}.bash yazi-cli/completions/ya.bash -t %{buildroot}%{bash_completions_dir}
+install -Dpm 0644 yazi-boot/completions/%{name}.fish yazi-cli/completions/ya.fish -t %{buildroot}%{fish_completions_dir}
+install -Dpm 0644 yazi-boot/completions/_%{name} yazi-cli/completions/_ya -t %{buildroot}%{zsh_completions_dir}
 
 %if %{with check}
 %check
@@ -63,9 +63,12 @@ install -Dpm 0644 yazi-boot/completions/_%{name} %{buildroot}%{_datadir}/zsh/sit
 %doc README.md
 %{_bindir}/ya
 %{_bindir}/yazi
-%{_datadir}/bash-completion/completions/%{name}
-%{_datadir}/fish/vendor_completions.d/%{name}.fish
-%{_datadir}/zsh/site-functions/_%{name}
+%{bash_completions_dir}/%{name}.bash
+%{bash_completions_dir}/ya.bash
+%{zsh_completions_dir}/_%{name}
+%{zsh_completions_dir}/_ya
+%{fish_completions_dir}/%{name}.fish
+%{fish_completions_dir}/ya.fish
 
 %changelog
 %autochangelog
