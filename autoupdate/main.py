@@ -76,6 +76,9 @@ def update_local_version(local_name: str, new_version: str) -> bool:
     if count == 0:
         logging.error(f"No substitution can be made for the spec file of {local_name}")
         return False
+    text, count = re.subn(r"%autorelease.+", "%autorelease", text)
+    if count != 0:
+        logging.info(f"Project {local_name} autorelease info reset")
     with open(get_spec_file(local_name), "w", encoding="utf-8") as f:
         f.write(text)
     return True
