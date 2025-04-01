@@ -160,6 +160,10 @@ def copr_rebuild(project: CoprProject):
 
 
 def set_log_level():
+    """
+    Copied from https://stackoverflow.com/questions/14097061/easier-way-to-enable-verbose-logging
+    License: CC BY-SA 4.0
+    """
     parser = argparse.ArgumentParser()
     parser.add_argument(
         '--debug',
