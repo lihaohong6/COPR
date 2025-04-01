@@ -16,7 +16,7 @@ Recommends: ffmpeg
 Recommends: p7zip
 Recommends: p7zip-plugins
 Recommends: jq
-Recommends: poppler
+Recommends: poppler-utils
 Recommends: fd-find
 Recommends: ripgrep
 Recommends: fzf
@@ -41,11 +41,15 @@ Blazing fast terminal file manager written in Rust, based on async I/O.}
 %if 0%{?fedora} >= 42
 CFLAGS="$CFLAGS -std=gnu17"
 %endif
-RUSTFLAGS='-Copt-level=3 -Cdebuginfo=2 -Ccodegen-units=1 -Cstrip=none -Cforce-frame-pointers=yes' cargo build -j${RPM_BUILD_NCPUS} --release --locked
+export YAZI_GEN_COMPLETIONS=1 
+RUSTFLAGS='-Copt-level=3 -Cdebuginfo=2 -Ccodegen-units=1 -Cstrip=none -Cforce-frame-pointers=yes' cargo build -j${RPM_BUILD_NCPUS} --locked --release
 cargo tree --workspace --edges no-build,no-dev,no-proc-macro --no-dedupe --target all --prefix none --format "{l}: {p}" | sed -e "s: ($(pwd)[^)]*)::g" -e "s: / :/:g" -e "s:/: OR :g" | sort -u > LICENSE.dependencies
 
 %install
 install -Dpm 0755 -t %{buildroot}%{_bindir} target/release/yazi target/release/ya 
+install -Dpm 0644 yazi-boot/completions/%{name}.bash %{buildroot}%{_datadir}/bash-completion/completions/%{name}
+install -Dpm 0644 yazi-boot/completions/%{name}.fish %{buildroot}%{_datadir}/fish/vendor_completions.d/%{name}.fish
+install -Dpm 0644 yazi-boot/completions/_%{name} %{buildroot}%{_datadir}/zsh/site-functions/_%{name}
 
 %if %{with check}
 %check
@@ -59,6 +63,9 @@ install -Dpm 0755 -t %{buildroot}%{_bindir} target/release/yazi target/release/y
 %doc README.md
 %{_bindir}/ya
 %{_bindir}/yazi
+%{_datadir}/bash-completion/completions/%{name}
+%{_datadir}/fish/vendor_completions.d/%{name}.fish
+%{_datadir}/zsh/site-functions/_%{name}
 
 %changelog
 %autochangelog
