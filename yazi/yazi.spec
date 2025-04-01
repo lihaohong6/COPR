@@ -41,6 +41,11 @@ Blazing fast terminal file manager written in Rust, based on async I/O.}
 %if 0%{?fedora} >= 42
 CFLAGS="$CFLAGS -std=gnu17"
 %endif
+# rust version too low for EPEL 9 and below
+%if 0%{?el} <= 9
+  bash <(curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs) --profile=minimal -y
+  . "$HOME/.cargo/env"
+%endif
 export YAZI_GEN_COMPLETIONS=1 
 RUSTFLAGS='-Copt-level=3 -Cdebuginfo=2 -Ccodegen-units=1 -Cstrip=none -Cforce-frame-pointers=yes' cargo build -j${RPM_BUILD_NCPUS} --locked --release
 cargo tree --workspace --edges no-build,no-dev,no-proc-macro --no-dedupe --target all --prefix none --format "{l}: {p}" | sed -e "s: ($(pwd)[^)]*)::g" -e "s: / :/:g" -e "s:/: OR :g" | sort -u > LICENSE.dependencies
