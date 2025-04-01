@@ -57,9 +57,9 @@ go build -ldflags "-X main.version=%{version} \
 install -m 0755 -vd         %{buildroot}%{_bindir}
 install -m 0755 -vp chezmoi %{buildroot}%{_bindir}/
 
-install -Dpm 0644 completions/%{name}-completion.bash %{buildroot}%{_datadir}/bash-completion/completions/%{name}
-install -Dpm 0644 completions/%{name}.fish            %{buildroot}%{_datadir}/fish/vendor_completions.d/%{name}.fish
-install -Dpm 0644 completions/%{name}.zsh             %{buildroot}%{_datadir}/zsh/site-functions/_%{name}
+install -Dpm 0644 completions/%{name}-completion.bash %{buildroot}%{bash_completions_dir}/%{name}.bash
+install -Dpm 0644 completions/%{name}.fish            -t %{buildroot}%{fish_completions_dir}
+install -Dpm 0644 completions/%{name}.zsh             %{buildroot}%{zsh_completions_dir}/_%{name}
 %endif
 
 %if %{without bootstrap}
@@ -74,9 +74,9 @@ make test
 %license %{golicenses}
 %doc %{godocs}
 %{_bindir}/chezmoi
-%{_datadir}/bash-completion/completions/%{name}
-%{_datadir}/fish/vendor_completions.d/%{name}.fish
-%{_datadir}/zsh/site-functions/_%{name}
+%{bash_completions_dir}/%{name}.bash
+%{fish_completions_dir}/%{name}.fish
+%{zsh_completions_dir}/_%{name}
 %endif
 
 %gopkgfiles
