@@ -3,7 +3,7 @@
 
 Name:           yazi
 Version:        25.3.2
-Release:        %autorelease
+Release:        %autorelease -b 2
 Summary:        Yazi file manager
 
 License:        MIT
