@@ -2,4 +2,5 @@
 *.rpm
 *.tar.gz
 *.zip
+*.crate
 result*/
