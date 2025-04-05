@@ -29,6 +29,7 @@ Summary:        %{summary}
 %files       -n %{crate}
 %license LICENSE-APACHE
 %license LICENSE-MIT
+%license LICENSE.dependencies
 %doc README.md
 %{_bindir}/fj
 
@@ -45,6 +46,7 @@ sed -i '/\[net\]/q' .cargo/config.toml
 # Oniguruma fails to compile because gcc15 defaults to std=gnu23 
 export CFLAGS="$CFLAGS -std=gnu17"
 %cargo_build
+cargo tree --workspace --edges no-build,no-dev,no-proc-macro --no-dedupe --target all --prefix none --format "{l}: {p}" | sed -e "s: ($(pwd)[^)]*)::g" -e "s: / :/:g" -e "s:/: OR :g" | sort -u > LICENSE.dependencies
 
 %install
 install -Dpm 0755 target/release/fj -t %{buildroot}%{_bindir}
