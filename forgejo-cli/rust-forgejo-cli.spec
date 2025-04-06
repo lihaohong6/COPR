@@ -43,8 +43,18 @@ Summary:        %{summary}
 %build
 # Remove offline build stuff
 sed -i '/\[net\]/q' .cargo/config.toml
+
 # Oniguruma fails to compile because gcc15 defaults to std=gnu23 
-export CFLAGS="$CFLAGS -std=gnu17"
+%if 0%{?fedora} >= 42
+  CFLAGS="$CFLAGS -std=gnu17"
+%endif
+
+# rust version too low for EPEL 9 and below
+%if 0%{?el} <= 9
+  bash <(curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs) --profile=minimal -y
+  . "$HOME/.cargo/env"
+%endif
+
 %cargo_build
 cargo tree --workspace --edges no-build,no-dev,no-proc-macro --no-dedupe --target all --prefix none --format "{l}: {p}" | sed -e "s: ($(pwd)[^)]*)::g" -e "s: / :/:g" -e "s:/: OR :g" | sort -u > LICENSE.dependencies
 
