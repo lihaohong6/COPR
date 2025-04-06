@@ -19,6 +19,11 @@ BuildRequires:  zlib-devel
 %global _description %{expand:
 CLI tool for Forgejo.}
 
+# Oniguruma fails to compile because gcc15 defaults to std=gnu23 
+%if 0%{?fedora} >= 42
+  %global optflags %{optflags} -std=gnu17
+%endif
+
 %description %{_description}
 
 %files       -n %{crate}
@@ -30,29 +35,24 @@ CLI tool for Forgejo.}
 
 %prep
 %autosetup -n %{crate}-%{version} -p1
-%cargo_prep
+cargo vendor
+%cargo_prep -v vendor
 
 %generate_buildrequires
 # %%cargo_generate_buildrequires
 
 %build
-# Remove offline build stuff
-sed -i '/\[net\]/q' .cargo/config.toml
-
-# Oniguruma fails to compile because gcc15 defaults to std=gnu23 
-%if 0%{?fedora} >= 42
-  CFLAGS="$CFLAGS -std=gnu17"
-%endif
 
 %cargo_build
-cargo tree --workspace --edges no-build,no-dev,no-proc-macro --no-dedupe --target all --prefix none --format "{l}: {p}" | sed -e "s: ($(pwd)[^)]*)::g" -e "s: / :/:g" -e "s:/: OR :g" | sort -u > LICENSE.dependencies
+%{cargo_license} > LICENSE.dependencies
 
 %install
-install -Dpm 0755 target/release/fj -t %{buildroot}%{_bindir}
+%define cargo_install_lib 0
+%cargo_install
 
 %if %{with check}
 %check
-# %%cargo_test
+%cargo_test
 %endif
 
 %changelog
