@@ -34,31 +34,30 @@ CLI Tool for codeberg similar to gh and glab.}
 
 %prep
 %autosetup -n %{crate}-%{version} -p1
-%cargo_prep
+cargo vendor
+%cargo_prep -v vendor
 
 %generate_buildrequires
 # %%cargo_generate_buildrequires
 
 %build
-# Remove offline build stuff
-sed -i '/\[net\]/q' .cargo/config.toml
-
 %cargo_build
-cargo tree --workspace --edges no-build,no-dev,no-proc-macro --no-dedupe --target all --prefix none --format "{l}: {p}" | sed -e "s: ($(pwd)[^)]*)::g" -e "s: / :/:g" -e "s:/: OR :g" | sort -u > LICENSE.dependencies
+%{cargo_license} > LICENSE.dependencies
 BERG=./target/release/berg
 $BERG completion bash > berg.bash
 $BERG completion fish > berg.fish
 $BERG completion zsh > _berg
 
 %install
-install -Dpm 0755 target/release/berg -t %{buildroot}%{_bindir}
+%define cargo_install_lib 0
+%cargo_install
 install -Dpm 0644 berg.bash -t %{buildroot}%{bash_completions_dir}
 install -Dpm 0644 berg.fish -t %{buildroot}%{fish_completions_dir}
 install -Dpm 0644 _berg -t %{buildroot}%{zsh_completions_dir}
 
 %if %{with check}
 %check
-# %%cargo_test
+%cargo_test
 %endif
 
 %changelog
