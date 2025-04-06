@@ -21,11 +21,6 @@ CLI tool for Forgejo.}
 
 %description %{_description}
 
-%package     -n %{crate}
-Summary:        %{summary}
-
-%description -n %{crate} %{_description}
-
 %files       -n %{crate}
 %license LICENSE-APACHE
 %license LICENSE-MIT
