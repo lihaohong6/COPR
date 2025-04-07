@@ -34,13 +34,24 @@ CLI Tool for codeberg similar to gh and glab.}
 
 %prep
 %autosetup -n %{crate}-%{version} -p1
-cargo vendor
+
+echo 0%{?el}
+
+# rust version too low for EPEL 9 and below
+%if 0%{?el8} || 0%{?el9}
+  bash <(curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs) --profile=minimal -y
+  %define __rustc $HOME/.cargo/bin/rustc
+  %define __cargo /usr/bin/env CARGO_HOME=.cargo RUSTC_BOOTSTRAP=1 RUSTFLAGS='%{build_rustflags}' "$HOME/.cargo/bin/cargo"
+  %define __rustdoc $HOME/.cargo/bin/rustdoc
+%endif
+
+%__cargo vendor
 %cargo_prep -v vendor
 
 %generate_buildrequires
 # %%cargo_generate_buildrequires
 
-%build
+%build 
 %cargo_build
 %{cargo_license} > LICENSE.dependencies
 BERG=./target/release/berg
