@@ -35,6 +35,15 @@ CLI tool for Forgejo.}
 
 %prep
 %autosetup -n %{crate}-%{version} -p1
+
+# rust version too low for EPEL 9 and below
+%if 0%{?el8} || 0%{?el9}
+  bash <(curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs) --profile=minimal -y
+  %define __rustc $HOME/.cargo/bin/rustc
+  %define __cargo /usr/bin/env CARGO_HOME=.cargo RUSTC_BOOTSTRAP=1 RUSTFLAGS='%{build_rustflags}' "$HOME/.cargo/bin/cargo"
+  %define __rustdoc $HOME/.cargo/bin/rustdoc
+%endif
+
 cargo vendor
 %cargo_prep -v vendor
 
