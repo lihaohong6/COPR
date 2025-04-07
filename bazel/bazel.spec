@@ -20,19 +20,21 @@ BuildRequires:  java-21-openjdk-devel
 Build and test software of any size, quickly and reliably.
 
 %prep
-unzip %{_sourcedir}/bazel-${version}-dist.zip
+unzip %{_sourcedir}/bazel-%{version}-dist.zip
 
 %build
 env EXTRA_BAZEL_ARGS="--tool_java_runtime_version=local_jdk" bash ./compile.sh
-./output/bazel build //src:bazel --compilation_mode=opt --stamp --embed_label=%{version}
+./output/bazel build //src:bazel //scripts:bazel-complete.bash --compilation_mode=opt --stamp --embed_label=%{version}
 
 %install
-install -Dpm 0755 ./bazel-bin/src/bazel                  %{buildroot}%{_bindir}/bazel
-install -Dpm 0644 ./scripts/zsh_completion/_bazel        %{buildroot}%{_datadir}/zsh/site-functions/_%{name}
+install -Dpm 0755 ./bazel-bin/src/bazel                   -t %{buildroot}%{_bindir}
+install -Dpm 0644 ./bazel-bin/scripts/bazel-complete.bash    %{buildroot}%{bash_completions_dir}/%{name}.bash
+install -Dpm 0644 ./scripts/zsh_completion/_bazel         -t %{buildroot}%{zsh_completions_dir}
 
 %files
 %{_bindir}/bazel
-%{_datadir}/zsh/site-functions/_%{name}
+%{zsh_completions_dir}/_%{name}
+%{bash_completions_dir}/%{name}.bash
 %doc 
 %license LICENSE 
 
