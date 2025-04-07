@@ -35,8 +35,6 @@ CLI Tool for codeberg similar to gh and glab.}
 %prep
 %autosetup -n %{crate}-%{version} -p1
 
-echo 0%{?el}
-
 # rust version too low for EPEL 9 and below
 %if 0%{?el8} || 0%{?el9}
   bash <(curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs) --profile=minimal -y
@@ -47,9 +45,6 @@ echo 0%{?el}
 
 %__cargo vendor
 %cargo_prep -v vendor
-
-%generate_buildrequires
-# %%cargo_generate_buildrequires
 
 %build 
 %cargo_build
