@@ -31,6 +31,7 @@ BuildRequires: git
 
 %global _description %{expand:
 Blazing fast terminal file manager written in Rust, based on async I/O.}
+%global debug_package %{nil}
 
 %description %{_description}
 
@@ -59,11 +60,10 @@ export YAZI_GEN_COMPLETIONS=1
 %{cargo_license} > LICENSE.dependencies
 
 %install
-%global debug_package %{nil}
 install -Dpm 0755 -t %{buildroot}%{_bindir} target/release/yazi target/release/ya 
 install -Dpm 0644 yazi-boot/completions/%{name}.bash yazi-cli/completions/ya.bash -t %{buildroot}%{bash_completions_dir}
 install -Dpm 0644 yazi-boot/completions/%{name}.fish yazi-cli/completions/ya.fish -t %{buildroot}%{fish_completions_dir}
-install -Dpm 0644 yazi-boot/completions/_%{name} yazi-cli/completions/_ya -t %{buildroot}%{zsh_completions_dir}
+install -Dpm 0644 yazi-boot/completions/_%{name}     yazi-cli/completions/_ya     -t %{buildroot}%{zsh_completions_dir}
 
 %if %{with check}
 %check
