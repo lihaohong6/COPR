@@ -37,20 +37,29 @@ Blazing fast terminal file manager written in Rust, based on async I/O.}
 %prep
 %autosetup -n yazi-%{version} -p1
 
-%build
-%if 0%{?fedora} >= 42
-CFLAGS="$CFLAGS -std=gnu17"
-%endif
 # rust version too low for EPEL 9 and below
-%if 0%{?el} <= 9
+%if 0%{?el8} || 0%{?el9}
   bash <(curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs) --profile=minimal -y
-  . "$HOME/.cargo/env"
+  %define __rustc $HOME/.cargo/bin/rustc
+  %define __cargo /usr/bin/env CARGO_HOME=.cargo RUSTC_BOOTSTRAP=1 RUSTFLAGS='%{build_rustflags}' "$HOME/.cargo/bin/cargo"
+  %define __rustdoc $HOME/.cargo/bin/rustdoc
 %endif
+
+# Oniguruma fails to compile because gcc15 defaults to std=gnu23
+%if 0%{?fedora} >= 42
+  %global optflags %{optflags} -std=gnu17
+%endif
+
+%__cargo vendor
+%cargo_prep -v vendor
+
+%build
 export YAZI_GEN_COMPLETIONS=1 
-RUSTFLAGS='-Copt-level=3 -Cdebuginfo=2 -Ccodegen-units=1 -Cstrip=none -Cforce-frame-pointers=yes' cargo build -j${RPM_BUILD_NCPUS} --locked --release
-cargo tree --workspace --edges no-build,no-dev,no-proc-macro --no-dedupe --target all --prefix none --format "{l}: {p}" | sed -e "s: ($(pwd)[^)]*)::g" -e "s: / :/:g" -e "s:/: OR :g" | sort -u > LICENSE.dependencies
+%cargo_build
+%{cargo_license} > LICENSE.dependencies
 
 %install
+%global debug_package %{nil}
 install -Dpm 0755 -t %{buildroot}%{_bindir} target/release/yazi target/release/ya 
 install -Dpm 0644 yazi-boot/completions/%{name}.bash yazi-cli/completions/ya.bash -t %{buildroot}%{bash_completions_dir}
 install -Dpm 0644 yazi-boot/completions/%{name}.fish yazi-cli/completions/ya.fish -t %{buildroot}%{fish_completions_dir}
@@ -58,7 +67,7 @@ install -Dpm 0644 yazi-boot/completions/_%{name} yazi-cli/completions/_ya -t %{b
 
 %if %{with check}
 %check
-# %%cargo_test
+%cargo_test
 %endif
 
 %files
