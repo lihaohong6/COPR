@@ -3,7 +3,7 @@
 
 Name:           yazi
 Version:        25.4.8
-Release:        %autorelease
+Release:        %autorelease -b 2
 Summary:        Yazi file manager
 
 License:        MIT
@@ -21,6 +21,7 @@ Recommends: fd-find
 Recommends: ripgrep
 Recommends: fzf
 Recommends: zoxide
+Recommends: resvg
 Recommends: ImageMagick
 Recommends: git
 
