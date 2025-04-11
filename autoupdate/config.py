@@ -12,5 +12,6 @@ all_projects = [
     CoprProject("bazel", 15227, test_build_locally=False),
     CoprProject("bazel7", 15227, copr_repo="bazel", version_filter=lambda v: v.startswith("7"), test_build_locally=False),
     CoprProject("codeberg-cli", 377554),
-    CoprProject("forgejo-cli", 377539)
+    CoprProject("forgejo-cli", 377539),
+    CoprProject("resvg", 377646),
 ]
