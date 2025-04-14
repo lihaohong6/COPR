@@ -8,10 +8,14 @@ Source:         https://github.com/bazelbuild/bazel/releases/download/%{version}
 BuildRequires:  gcc
 BuildRequires:  gcc-c++
 BuildRequires:  make
-BuildRequires:  python
 BuildRequires:  zip
 BuildRequires:  unzip
 BuildRequires:  java-21-openjdk-devel
+%if 0%{?el8}
+BuildRequires:  python3
+%else
+BuildRequires:  python
+%endif
 
 # FIXME: should only disable stripping and keep everything else
 %define __spec_install_post /bin/true
