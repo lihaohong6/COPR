@@ -1,0 +1,5 @@
+[archive]
+
+[licensing]
+detector = "askalono"
+exclude_files = ["examples/language/license", "examples/issue114/license"]

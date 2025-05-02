@@ -1,6 +1,6 @@
 *-build/
 *.rpm
-*.tar.gz
+*.tar.*
 *.zip
 *.crate
 result*/
