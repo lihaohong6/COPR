@@ -44,7 +44,7 @@ CLI tool for Forgejo.}
   %define __rustdoc $HOME/.cargo/bin/rustdoc
 %endif
 
-cargo vendor
+%__cargo vendor
 %cargo_prep -v vendor
 
 %generate_buildrequires
