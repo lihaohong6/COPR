@@ -3,7 +3,7 @@
 
 Name:           yazi
 Version:        25.5.31
-Release:        %autorelease
+Release:        %autorelease -b 2
 Summary:        Yazi file manager
 
 License:        MIT
@@ -57,6 +57,7 @@ Blazing fast terminal file manager written in Rust, based on async I/O.}
 
 %build
 export YAZI_GEN_COMPLETIONS=1 
+export JEMALLOC_SYS_WITH_LG_PAGE=14
 %cargo_build
 %{cargo_license} > LICENSE.dependencies
 
