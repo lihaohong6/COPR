@@ -1,6 +1,6 @@
 Name:           bazel7
-Version:        7.6.1
-Release:        %autorelease -b 2
+Version:        7.6.2
+Release:        %autorelease
 Summary:        Build and test software of any size, quickly and reliably. 
 License:        Apache-2.0
 URL:            https://bazel.build/ 
