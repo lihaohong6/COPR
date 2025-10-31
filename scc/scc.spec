@@ -12,8 +12,7 @@
 
 # https://github.com/boyter/scc
 %global goipath         github.com/boyter/scc
-Version:                3.5.0
-
+Version:                3.6.0
 %gometa -f
 
 %global common_description %{expand:
