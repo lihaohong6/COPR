@@ -2,8 +2,8 @@
 %bcond check 1
 
 Name:           yazi
-Version:        25.5.31
-Release:        %autorelease -b 2
+Version:        25.12.29
+Release:        %autorelease
 Summary:        Yazi file manager
 
 License:        MIT
