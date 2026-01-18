@@ -4,7 +4,7 @@
 %global crate codeberg-cli
 
 Name:           codeberg-cli
-Version:        0.5.3
+Version:        0.5.4
 Release:        %autorelease
 Summary:        CLI Tool for codeberg similar to gh and glab
 
