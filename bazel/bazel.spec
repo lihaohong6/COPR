@@ -12,7 +12,9 @@ BuildRequires:  zip
 BuildRequires:  unzip
 BuildRequires:  java-21-openjdk-devel
 %if 0%{?el8}
-BuildRequires:  python3
+BuildRequires:  python38
+%global __python3 /usr/bin/python3.8
+%global python3_pkgversion 38
 %else
 BuildRequires:  python
 %endif
