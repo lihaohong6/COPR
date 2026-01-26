@@ -1,5 +1,5 @@
 Name:           bazel 
-Version:        9.0.0
+Version:        8.5.1
 Release:        %autorelease
 Summary:        Build and test software of any size, quickly and reliably. 
 License:        Apache-2.0
