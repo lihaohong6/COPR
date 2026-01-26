@@ -1,4 +1,4 @@
-Name:           bazel 
+Name:           bazel8
 Version:        8.5.1
 Release:        %autorelease
 Summary:        Build and test software of any size, quickly and reliably. 
@@ -31,12 +31,12 @@ env EXTRA_BAZEL_ARGS="--tool_java_runtime_version=local_jdk" bash ./compile.sh
 ./output/bazel build //src:bazel //scripts:bazel-complete.bash --compilation_mode=opt --stamp --embed_label=%{version}
 
 %install
-install -Dpm 0755 ./bazel-bin/src/bazel                   -t %{buildroot}%{_bindir}
+install -Dpm 0755 ./bazel-bin/src/bazel                   -t %{buildroot}%{_bindir}/%{name}
 install -Dpm 0644 ./bazel-bin/scripts/bazel-complete.bash    %{buildroot}%{bash_completions_dir}/%{name}.bash
-install -Dpm 0644 ./scripts/zsh_completion/_bazel         -t %{buildroot}%{zsh_completions_dir}
+install -Dpm 0644 ./scripts/zsh_completion/_bazel         -t %{buildroot}%{zsh_completions_dir}/_%{name}
 
 %files
-%{_bindir}/bazel
+%{_bindir}/%{name}
 %{zsh_completions_dir}/_%{name}
 %{bash_completions_dir}/%{name}.bash
 %doc 
