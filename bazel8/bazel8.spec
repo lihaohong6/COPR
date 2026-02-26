@@ -1,5 +1,5 @@
 Name:           bazel8
-Version:        8.5.1
+Version:        8.6.0
 Release:        %autorelease
 Summary:        Build and test software of any size, quickly and reliably. 
 License:        Apache-2.0
