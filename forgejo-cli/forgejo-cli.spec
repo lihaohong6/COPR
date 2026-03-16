@@ -4,7 +4,7 @@
 %global crate forgejo-cli
 
 Name:           forgejo-cli
-Version:        0.4.0
+Version:        0.4.1
 Release:        %autorelease
 Summary:        CLI tool for Forgejo
 
