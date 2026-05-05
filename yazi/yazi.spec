@@ -2,7 +2,7 @@
 %bcond check 1
 
 Name:           yazi
-Version:        26.1.22
+Version:        26.5.6
 Release:        %autorelease
 Summary:        Yazi file manager
 
