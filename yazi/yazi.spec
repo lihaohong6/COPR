@@ -52,8 +52,11 @@ Blazing fast terminal file manager written in Rust, based on async I/O.}
   %global optflags %{optflags} -std=gnu17
 %endif
 
-%__cargo vendor
+# %%cargo_prep only rewrites the crates.io part. Yazi uses a forked version of
+# ratatui, so we need to rewrite git sources as well.
+%__cargo vendor > cargo-vendor-config.toml
 %cargo_prep -v vendor
+awk '/^\[/ { keep = /^\[source\."git\+/ } keep' cargo-vendor-config.toml >> .cargo/config.toml
 
 %build
 export YAZI_GEN_COMPLETIONS=1 
