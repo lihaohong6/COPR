@@ -10,7 +10,11 @@ BuildRequires:  gcc-c++
 BuildRequires:  make
 BuildRequires:  zip
 BuildRequires:  unzip
+%if 0%{?fedora} >= 44
+BuildRequires:  java-25-openjdk-devel
+%else
 BuildRequires:  java-21-openjdk-devel
+%endif
 %if 0%{?el8}
 BuildRequires:  python3
 %else
@@ -27,13 +31,14 @@ Build and test software of any size, quickly and reliably.
 unzip %{_sourcedir}/bazel-%{version}-dist.zip
 
 %build
-env EXTRA_BAZEL_ARGS="--tool_java_runtime_version=local_jdk" bash ./compile.sh
-./output/bazel build //src:bazel //scripts:bazel-complete.bash --compilation_mode=opt --stamp --embed_label=%{version}
+# JDK 23+ no longer runs annotation processors implicitly (fixed upstream in Bazel 9)
+env BAZEL_JAVAC_OPTS="-proc:full" EXTRA_BAZEL_ARGS="--tool_java_runtime_version=local_jdk --host_javacopt=-proc:full" bash ./compile.sh
+./output/bazel build --host_javacopt=-proc:full //src:bazel //scripts:bazel-complete.bash --compilation_mode=opt --stamp --embed_label=%{version}
 
 %install
-install -Dpm 0755 ./bazel-bin/src/bazel                   -t %{buildroot}%{_bindir}/%{name}
+install -Dpm 0755 ./bazel-bin/src/bazel                   %{buildroot}%{_bindir}/%{name}
 install -Dpm 0644 ./bazel-bin/scripts/bazel-complete.bash    %{buildroot}%{bash_completions_dir}/%{name}.bash
-install -Dpm 0644 ./scripts/zsh_completion/_bazel         -t %{buildroot}%{zsh_completions_dir}/_%{name}
+install -Dpm 0644 ./scripts/zsh_completion/_bazel         %{buildroot}%{zsh_completions_dir}/_%{name}
 
 %files
 %{_bindir}/%{name}

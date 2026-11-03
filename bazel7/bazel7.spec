@@ -10,7 +10,11 @@ BuildRequires:  gcc-c++
 BuildRequires:  make
 BuildRequires:  zip
 BuildRequires:  unzip
+%if 0%{?fedora} >= 44
+BuildRequires:  java-25-openjdk-devel
+%else
 BuildRequires:  java-21-openjdk-devel
+%endif
 %if 0%{?el8}
 BuildRequires:  python3
 %else
@@ -27,8 +31,11 @@ Build and test software of any size, quickly and reliably.
 unzip %{_sourcedir}/bazel-%{version}-dist.zip
 
 %build
-env EXTRA_BAZEL_ARGS="--tool_java_runtime_version=local_jdk" bash ./compile.sh
-./output/bazel build //src:bazel //scripts:bazel-complete.bash --compilation_mode=opt --stamp --embed_label=%{version}
+# JDK 23+ no longer runs annotation processors implicitly (fixed upstream in Bazel 9)
+# The bootstrap binary has no version label, which makes bazel_features assume
+# the newest Bazel and use symbols (e.g. `macro`) that Bazel 7 doesn't have
+env BAZEL_DEV_VERSION_OVERRIDE=%{version} BAZEL_JAVAC_OPTS="-proc:full" EXTRA_BAZEL_ARGS="--tool_java_runtime_version=local_jdk --host_javacopt=-proc:full" bash ./compile.sh
+./output/bazel build --host_javacopt=-proc:full //src:bazel //scripts:bazel-complete.bash --compilation_mode=opt --stamp --embed_label=%{version}
 
 %install
 install -Dpm 0755 ./bazel-bin/src/bazel                   %{buildroot}%{_bindir}/%{name}

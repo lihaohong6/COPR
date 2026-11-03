@@ -10,7 +10,11 @@ BuildRequires:  gcc-c++
 BuildRequires:  make
 BuildRequires:  zip
 BuildRequires:  unzip
+%if 0%{?fedora} >= 44
+BuildRequires:  java-25-openjdk-devel
+%else
 BuildRequires:  java-21-openjdk-devel
+%endif
 %if 0%{?el8}
 BuildRequires:  python38
 %global __python3 /usr/bin/python3.8
