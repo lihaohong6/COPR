@@ -10,7 +10,7 @@
 
 # https://github.com/twpayne/chezmoi
 %global goipath         github.com/twpayne/chezmoi
-Version:                2.74.1
+Version:                2.74.2
 %gometa -f
 
 %global common_description %{expand:
